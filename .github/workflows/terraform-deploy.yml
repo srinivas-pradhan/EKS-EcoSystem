@@ -1,0 +1,39 @@
+name: Terraform K8s Deployment Pipeline.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      choice:
+        type: choice
+        description: Choose an action to execute.
+        options:
+        - apply
+        - destroy
+
+env:
+  
+  AWS_REGION : "us-east-2"
+
+permissions: write-all
+
+jobs:
+  Environment-Setup-And-Validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git clone the repository
+        uses: actions/checkout@v5
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4.3.1
+        with:
+          role-to-assume: arn:aws:iam::703866956858:role/GITHUB_OIDC_ROLE
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Sts GetCallerIdentity
+        run: |
+          aws sts get-caller-identity
