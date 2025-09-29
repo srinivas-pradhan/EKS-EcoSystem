@@ -1,10 +1,10 @@
 locals {
-    values = read_terragrunt_config("values.hcl")
+  values = read_terragrunt_config("values.hcl")
 }
 generate "provider" {
-  path = "provider.tf"
+  path      = "provider.tf"
   if_exists = "overwrite_terragrunt"
-  contents = <<EOF
+  contents  = <<EOF
 terraform {
   required_providers {
     aws = {
@@ -33,5 +33,9 @@ EOF
 }
 
 inputs = {
-
+  name               = local.values.locals.name
+  kubernetes_version = local.values.locals.kubernetes_version
+  vpc_id             = local.values.locals.vpc_id
+  subnets            = local.values.locals.subnets
+  tags               = local.values.locals.tags
 }
