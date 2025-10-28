@@ -21,10 +21,10 @@ module "eks_al2023" {
   subnet_ids = var.subnets
 
   self_managed_node_groups = {
-    apps = {
+    ops = {
       ami_type      = "AL2023_x86_64_STANDARD"
       instance_type = "m6i.large"
-
+      bootstrap_extra_args = "--kubelet-extra-args '--node-labels=environment=ops,app=ops --register-with-taints=environment=ops:NoSchedule'"
       min_size = 1
       max_size = 1
       # This value is ignored after the initial creation
@@ -49,7 +49,6 @@ module "eks_al2023" {
       ]
     }
   }
-  # kubelet_extra_args = "--node-labels=environment=dev,app=web --register-with-taints=key=value:NoSchedule"
 
 
   tags = var.tags
